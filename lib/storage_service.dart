@@ -28,7 +28,7 @@ class Storage{
   }
 
   Future<String> downloadURL(String imgName) async {
-    String downloadURL = await storage.ref('"login_register_picture/$imgName').getDownloadURL();
+    String downloadURL = await storage.ref('login_register_picture/$imgName').getDownloadURL();
 
     return downloadURL;
   }
