@@ -1,9 +1,11 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
+import 'package:alert_dialog/alert_dialog.dart';
 import 'package:shopper/storage_service.dart';
 import 'package:flutter/src/widgets/image.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -24,7 +26,6 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
-
 
 class _HomePageState extends State<HomePage> {
 
@@ -245,6 +246,11 @@ class _HomePageState extends State<HomePage> {
 
 class SingUp extends StatelessWidget {
 
+  var nameController = new TextEditingController();
+  var studentIDController = new TextEditingController();
+  var passwordController = new TextEditingController();
+  final databaseRef = FirebaseDatabase.instance.ref();
+
   Widget buildName() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,12 +265,13 @@ class SingUp extends StatelessWidget {
                 BoxShadow(
                     color: Colors.black26,
                     blurRadius: 6,
-                    offset: Offset(0,2)
+                    offset: Offset(0, 2)
                 )
               ]
           ),
           height: 60,
           child: TextField(
+            controller: nameController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.black87,
@@ -301,12 +308,13 @@ class SingUp extends StatelessWidget {
                 BoxShadow(
                     color: Colors.black26,
                     blurRadius: 6,
-                    offset: Offset(0,2)
+                    offset: Offset(0, 2)
                 )
               ]
           ),
           height: 60,
           child: TextField(
+            controller: studentIDController,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.black87,
@@ -343,12 +351,13 @@ class SingUp extends StatelessWidget {
                 BoxShadow(
                     color: Colors.black26,
                     blurRadius: 6,
-                    offset: Offset(0,2)
+                    offset: Offset(0, 2)
                 )
               ]
           ),
           height: 60,
           child: TextField(
+            controller: passwordController,
             obscureText: true,
             style: TextStyle(
               color: Colors.black87,
@@ -377,7 +386,9 @@ class SingUp extends StatelessWidget {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () => print('Test'),
+        onPressed: () {
+          readDatabase(studentIDController.text);
+        },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15)
@@ -420,11 +431,8 @@ class SingUp extends StatelessWidget {
   }
 
 
-  const SingUp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -479,6 +487,27 @@ class SingUp extends StatelessWidget {
       ),
     );
   }
+
+  void insertData(String name, String studentID, String password) {
+    databaseRef.child("Student/$studentID").set({
+      'name': name,
+      'password': password,
+    });
+    nameController.clear();
+    passwordController.clear();
+  }
+
+  void readDatabase (String studentID) async {
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('Student/$studentID').get();
+    if (snapshot.exists) {
+      //Alert hinzufügen
+    } else {
+      insertData(nameController.text, studentIDController.text, passwordController.text);
+    }
+  }
+
+
 }
 
 class Bestellungen extends StatelessWidget {
