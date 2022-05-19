@@ -48,7 +48,7 @@ class  bestellungAnlegen extends StatelessWidget {
                       buildField('Preis',0xe0b2, TextEditingController()),
                       RaisedButton(
                         onPressed: () {
-                          context.read<AuthenticationService>().signOut();
+                          context.read<AuthenticationService>().signOut(context);
                         },
                         child: Text("Sign out"),
                       ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shopper/Bestellung_anlegen.dart';
 import 'package:shopper/Homepage.dart';
 import 'package:shopper/SignInPage.dart';
+import 'package:shopper/main.dart';
 
 class AuthenticationService {
 
@@ -42,15 +43,16 @@ class AuthenticationService {
     //passwordController.clear();
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthenticationWrapper()));
   }
   Future<String?> signIn({required String email, required String password, String name = "placeholder", required BuildContext context}) async{
     try{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       print("erfolgreich angemeldet");
       insertData(name, email,inputData().toString());
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage()));
+      Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthenticationWrapper()));
       return "erfolgreich angemeldet";
     } on FirebaseAuthException catch (e){
       print("User nicht gefunden");
