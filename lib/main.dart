@@ -1,6 +1,7 @@
 import 'package:shopper/Bestellung_anlegen.dart';
 import 'package:shopper/SignUpPage.dart';
 import 'package:shopper/forgotPasswordPage.dart';
+import 'package:shopper/screens/Bestellliste.dart';
 import 'authentication_class.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
+
             theme: ThemeData(
               primarySwatch: Colors.blue,
             ),
@@ -52,7 +54,7 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User?>();
 
     if(firebaseUser != null){
-      return HomePage();
+      return Bestellliste();
     }
       return SignInPage();
   }

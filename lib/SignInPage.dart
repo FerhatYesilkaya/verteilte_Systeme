@@ -64,11 +64,15 @@ class  SignInPage extends StatelessWidget {
                         child: RaisedButton(
                           elevation: 5,
                           onPressed: () {
-                            context.read<AuthenticationService>().signIn(
-                              email: emailController.text,
-                              password: passwordController.text,
-                              context: context,
-                            );
+                            if(emailController.text == "" && passwordController.text == "") {
+                              print("Ausfüllen");
+                            }else{
+                              context.read<AuthenticationService>().signIn(
+                                email: emailController.text,
+                                password: passwordController.text,
+                                context: context,
+                              );
+                            }
                           },
                           padding: EdgeInsets.all(15),
                           shape: RoundedRectangleBorder(
