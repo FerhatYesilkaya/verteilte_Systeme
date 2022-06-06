@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
-import 'package:flutter/material.dart';
+import 'package:snapshot/snapshot.dart';
 import 'package:provider/provider.dart';
-import 'package:shopper/screens/add_Bestellliste.dart';
 
 import '../authentication_class.dart';
+import 'add_Bestellliste.dart';
 
 class Bestellliste extends StatefulWidget {
   const Bestellliste({Key? key}) : super(key: key);
@@ -14,86 +17,51 @@ class Bestellliste extends StatefulWidget {
 }
 
 class _BestelllisteState extends State<Bestellliste> {
-  late Query _ref;
 
-  void initState() {
-    super.initState();
-    _ref = FirebaseDatabase.instance.ref().child("Bestellungen");
-  }
-  Widget buildBestelllisteItem({required Map bestellung}) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      padding: EdgeInsets.all(10),
-      height: 100,
-      color: Colors.white,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.person,
-                color: Theme.of(context).primaryColor,
-                size: 20,
-              ),
-              SizedBox(width: 6,),
-              Text(bestellung.values.elementAt(1).toString(), style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).primaryColor,
-                fontWeight:  FontWeight.w600,
-              ),
-              ),
-              SizedBox(width: 6,),
-              Text(bestellung.values.elementAt(0).toString().replaceAll("}", " ").replaceAll("{", " ").replaceAll(",", "\n"), style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).primaryColor,
-                fontWeight:  FontWeight.w600,
-              ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
+  final databaseRef = FirebaseDatabase.instance.ref().child("Bestellungen");
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
-        title: Text("Bestellungen"),
         actions: <Widget>[
           new IconButton(onPressed: (){
             context.read<AuthenticationService>().signOut(context);
           }, icon: Icon(Icons.logout)),
         ],
-      ),
-      body: Container(
-        height: double.infinity,
-        child: FirebaseAnimatedList(
-          query: _ref,
-          itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double>animation, int index){
-            Map bestellung = snapshot.value as Map<Object?, dynamic>;
-            print(bestellung);
-            return buildBestelllisteItem(bestellung: bestellung);
-          },
-        ),
+        title: Text("Bestellungen"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(
-            builder:  (_) {
-              return add_Bestellliste();
-            }
+              builder:  (_) {
+                return add_Bestellliste();
+              }
           ));
         },
         child: Icon(Icons.add, color: Colors.white),
       ),
-
+      body: SafeArea(
+        child: FirebaseAnimatedList(
+          query: databaseRef,
+          itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index){
+            var data = snapshot.value as Map?;
+            return ListTile(
+              onTap: (){
+                print(data!["Name"]);
+              },
+              title: Text(data!["Name"]),
+              subtitle: Text(data!["Produkte"].toString().replaceAll(" \\n ", "\n")),
+              trailing: IconButton(
+                onPressed: (){
+                  var keyFinder = snapshot.key;
+                  print(keyFinder);
+                },
+                icon: Icon(Icons.delete),
+              ),
+            );
+          },
+        ),
+      ),
     );
   }
 }
-

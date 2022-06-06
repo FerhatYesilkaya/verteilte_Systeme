@@ -34,6 +34,7 @@ class AuthenticationService {
     return uid;
     // here you write the codes to input the data into firestore
   }
+
   void insertData(String name, String eMail, String id) {
     databaseRef.child("Student/$id").set({
       'E-Mail': eMail,
