@@ -50,7 +50,7 @@ class  forgotPassword extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 50),
-                      buildField("E-Mail", 0xf705, emailController),
+                      buildPSWField("E-Mail", 0xf705, emailController,60,false),
                       SizedBox(height: 20),
                       ButtonTheme(
                         minWidth: 400,
@@ -59,6 +59,7 @@ class  forgotPassword extends StatelessWidget {
                           onPressed: () {
                             context.read<AuthenticationService>().resetPassword(
                               email: emailController.text,
+                              context: context,
                             );
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignInPage()));
                           },

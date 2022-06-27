@@ -55,8 +55,8 @@ class  SignInPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 50),
-                      buildField("E-Mail", 0xf705, emailController),
-                      buildField("Passwort", 0xf04b6, passwordController),
+                      buildPSWField("E-Mail", 0xf705, emailController,60,false),
+                      buildPSWField("Passwort", 0xf04b6, passwordController,60,true),
                       buildForgotPassBtn(context),
                       SizedBox(height: 5),
                       ButtonTheme(

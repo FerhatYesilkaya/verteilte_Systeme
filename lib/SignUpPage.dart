@@ -59,9 +59,9 @@ class  SignUpPage extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 50),
-                      buildField("Name", 0xf04b6, nameController),
-                      buildField("E-Mail", 0xf705, emailController),
-                      buildField("Passwort", 0xf04b6, passwordController),
+                      buildPSWField("Name", 0xf04b6, nameController,60,false),
+                      buildPSWField("E-Mail", 0xf705, emailController,60,false),
+                      buildPSWField("Passwort", 0xf04b6, passwordController,60,true),
                       SizedBox(height: 30),
                       ButtonTheme(
                         minWidth: 400,

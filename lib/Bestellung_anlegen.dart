@@ -43,9 +43,9 @@ class  bestellungAnlegen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 50),
-                      buildField('Vorname',0xf04b6, TextEditingController()),
-                      buildField('Artikel',0xf04b6, TextEditingController()),
-                      buildField('Preis',0xe0b2, TextEditingController()),
+                      buildField('Vorname',0xf04b6, TextEditingController(),60),
+                      buildField('Artikel',0xf04b6, TextEditingController(),60),
+                      buildField('Preis',0xe0b2, TextEditingController(),60),
                       RaisedButton(
                         onPressed: () {
                           context.read<AuthenticationService>().signOut(context);

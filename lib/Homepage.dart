@@ -28,12 +28,26 @@ class HomePage extends StatelessWidget{
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Bestellung anlegen"),
+        title: Text("Einkaufsliste"),
         actions: <Widget>[
           new IconButton(onPressed: (){
             context.read<AuthenticationService>().signOut(context);
           }, icon: Icon(Icons.logout)),
         ],
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x665ac18e),
+                    Color(0x995ac18e),
+                    Color(0xcc5ac18e),
+                    Color(0xff5ac18e),
+                  ]
+              )
+          ),
+        ),
       ),
       body: ListView.builder(
           itemCount: toDo.length,

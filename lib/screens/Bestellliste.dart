@@ -25,10 +25,29 @@ class _BestelllisteState extends State<Bestellliste> {
       appBar: AppBar(
         actions: <Widget>[
           new IconButton(onPressed: (){
+            context.read<AuthenticationService>().clearDatabaseProducts();
+          }, icon: Icon(Icons.delete)),
+
+          new IconButton(onPressed: (){
             context.read<AuthenticationService>().signOut(context);
           }, icon: Icon(Icons.logout)),
+
         ],
-        title: Text("Bestellungen"),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x665ac18e),
+                    Color(0x995ac18e),
+                    Color(0xcc5ac18e),
+                    Color(0xff5ac18e),
+                  ]
+              )
+          ),
+        ),
+        title: Text("Einkaufsliste"),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -38,7 +57,25 @@ class _BestelllisteState extends State<Bestellliste> {
               }
           ));
         },
-        child: Icon(Icons.add, color: Colors.white),
+
+        child: Container(
+          width: 60,
+          height: 60,
+          child: Icon(Icons.add),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0x665ac18e),
+                    Color(0x995ac18e),
+                    Color(0xcc5ac18e),
+                    Color(0xff5ac18e),
+                  ]
+              )
+          ),
+        ),
       ),
       body: SafeArea(
         child: FirebaseAnimatedList(
@@ -46,18 +83,8 @@ class _BestelllisteState extends State<Bestellliste> {
           itemBuilder: (BuildContext context, DataSnapshot snapshot, Animation<double> animation, int index){
             var data = snapshot.value as Map?;
             return ListTile(
-              onTap: (){
-                print(data!["Name"]);
-              },
               title: Text(data!["Name"]),
               subtitle: Text(data!["Produkte"].toString().replaceAll(" \\n ", "\n")),
-              trailing: IconButton(
-                onPressed: (){
-                  var keyFinder = snapshot.key;
-                  print(keyFinder);
-                },
-                icon: Icon(Icons.delete),
-              ),
             );
           },
         ),
