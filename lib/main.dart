@@ -1,4 +1,3 @@
-import 'package:shopper/Bestellung_anlegen.dart';
 import 'package:shopper/SignUpPage.dart';
 import 'package:shopper/forgotPasswordPage.dart';
 import 'package:shopper/screens/Bestellliste.dart';
@@ -8,7 +7,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:shopper/Homepage.dart';
 import 'package:shopper/SignInPage.dart';
 
 Future <void> main() async{
@@ -103,7 +101,8 @@ Widget buildPSWField(var Text, int x, TextEditingController mailcontroller, doub
 }
 
 
-Widget buildField(var Text, int x, TextEditingController mailcontroller, double y) {
+Widget buildField(BuildContext context, var Text, int x, TextEditingController mailcontroller, double y) {
+  context.read<AuthenticationService>().getBestellungenFromDatabase(mailcontroller, mailcontroller.text);
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[

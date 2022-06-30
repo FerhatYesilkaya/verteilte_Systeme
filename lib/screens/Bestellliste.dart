@@ -3,11 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:shopper/screens/add_Bestellliste2.dart';
 import 'package:snapshot/snapshot.dart';
 import 'package:provider/provider.dart';
-
 import '../authentication_class.dart';
-import 'add_Bestellliste.dart';
 
 class Bestellliste extends StatefulWidget {
   const Bestellliste({Key? key}) : super(key: key);
@@ -24,10 +23,6 @@ class _BestelllisteState extends State<Bestellliste> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          new IconButton(onPressed: (){
-            context.read<AuthenticationService>().clearDatabaseProducts();
-          }, icon: Icon(Icons.delete)),
-
           new IconButton(onPressed: (){
             context.read<AuthenticationService>().signOut(context);
           }, icon: Icon(Icons.logout)),
@@ -53,7 +48,7 @@ class _BestelllisteState extends State<Bestellliste> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(
               builder:  (_) {
-                return add_Bestellliste();
+                return add_Bestellliste2();
               }
           ));
         },
@@ -84,7 +79,11 @@ class _BestelllisteState extends State<Bestellliste> {
             var data = snapshot.value as Map?;
             return ListTile(
               title: Text(data!["Name"]),
-              subtitle: Text(data!["Produkte"].toString().replaceAll(" \\n ", "\n")),
+              subtitle: Text("Produkte einkaufen bei: "+data!["Geschäft"].toString()+"\n \n"+data!["Produkte"].toString().replaceAll(" \\n ", "\n")),
+              trailing: FlatButton.icon(onPressed: (){
+                context.read<AuthenticationService>().deleteBestellungByID(context, data!["ID"].toString());
+              },
+                  icon: Icon(Icons.delete), label: Text("")),
             );
           },
         ),

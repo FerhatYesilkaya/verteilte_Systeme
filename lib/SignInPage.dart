@@ -1,7 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:shopper/Bestellung_anlegen.dart';
-import 'package:shopper/Homepage.dart';
 import 'main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

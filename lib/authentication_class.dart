@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:shopper/Bestellung_anlegen.dart';
-import 'package:shopper/Homepage.dart';
 import 'package:shopper/SignInPage.dart';
 import 'package:shopper/main.dart';
 
@@ -123,7 +121,7 @@ class AuthenticationService {
     return userID;
   }
 
-  Future<void> addProdukt(String produkt) async {
+  Future<void> addProdukt(String produkt, String? laden) async {
 
     var changeString = produkt.replaceAll("\n", " \\n ");
     var userID = getuserID();
@@ -131,8 +129,10 @@ class AuthenticationService {
     final snapshot = await databaseRef.child('Student/$userID/Name').get();
 
     databaseRef.child("Bestellungen/$userID").set({
+      "ID": getuserID(),
       "Name": snapshot.value,
       "Produkte": changeString,
+      "Geschäft": laden,
     }
     );
   }
@@ -143,4 +143,29 @@ class AuthenticationService {
     print(url);
     return url;
   }
+
+  Future deleteBestellungByID(BuildContext context, String userID) async {
+    if(userID != getuserID()){
+      showAlertDialog(context, "Sie können nur eigene Bestellungen löschen", "Warnung");
+      return ;
+    }
+    databaseRef.child("Bestellungen/$userID").remove();
+    return await FirebaseStorage.instance.ref().child('').delete();
+  }
+
+    Future<String> getBestellungenFromDatabase(TextEditingController controller, var text) async{
+    var userID = getuserID();
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('Bestellungen/$userID').get();
+    var data = snapshot.value as Map?;
+    if (text == "") {
+      controller.text = data!["Produkte"].toString().replaceAll(" \\n ", "\n");
+    }else {
+      controller.text = text;
+    }
+    return "No Data";
+
+  }
+
+
 }

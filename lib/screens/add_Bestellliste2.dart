@@ -5,18 +5,26 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../Homepage.dart';
 import '../authentication_class.dart';
 import '../main.dart';
 
-class  add_Bestellliste extends StatelessWidget {
+class add_Bestellliste2 extends StatefulWidget {
+  const add_Bestellliste2({Key? key}) : super(key: key);
+
+  @override
+  State<add_Bestellliste2> createState() => _bestellungenstlState();
+}
 
 
-  const add_Bestellliste({Key? key}) : super(key: key);
+class _bestellungenstlState extends State<add_Bestellliste2> {
+
+  final TextEditingController produktController = TextEditingController();
+
+  final items = ["Lidl","Aldi","E-Center"];
+  String? value;
+
   @override
   Widget build(BuildContext context) {
-
-    final TextEditingController produktController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -81,14 +89,20 @@ class  add_Bestellliste extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 50),
-                      buildField('Titel',1, produktController, 150),
+                      buildField(context, 'Deine Produkte eintragen',1, produktController, 150),
                       SizedBox(height: 50),
-
+                      DropdownButton<String>(
+                        value: value,
+                        hint: Text("Laden"),
+                        items: items.map(buildMenuItem).toList(),
+                        onChanged: (value) => setState(() => this.value = value),
+                      ),
+                      SizedBox(height: 50),
                       RaisedButton(
                         elevation: 5,
                         onPressed: () {
                           context.read<AuthenticationService>().addProdukt(
-                              produktController.text
+                              produktController.text, value
                           );
                           Navigator.of(context)
                               .push(
@@ -119,4 +133,11 @@ class  add_Bestellliste extends StatelessWidget {
       ),
     );
   }
+  DropdownMenuItem<String> buildMenuItem(String item)  =>
+      DropdownMenuItem(value: item,
+        child: Text(
+          item,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      );
 }
