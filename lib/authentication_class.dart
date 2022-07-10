@@ -16,14 +16,11 @@ class AuthenticationService {
   Stream<User?> get authStateChanges => _firebaseAuth.idTokenChanges();
 
   Future<void> resetPassword({required String email, required BuildContext context}) async{
-    print(email);
     try{
       await _firebaseAuth.sendPasswordResetEmail(email: email);
       showAlertDialog(context,"E-Mail wurde verschickt","Passwort zurücksetzen");
-      print("Email verschickt");
     } on FirebaseAuthException catch (e){
       showAlertDialog(context,"E-Mail konnte nicht verschickt werden. Überprüfen Sie die Daten!","Passwort zurücksetzen");
-      print("Konnte nicht E-Mail verschicken");
     }
   }
 
@@ -87,14 +84,12 @@ class AuthenticationService {
     );
   }
 
-  Future<Object?> signIn({required String email, required String password, String name = "placeholder", required BuildContext context}) async{
+  Future<Object?> signIn({required String email, required String password, required BuildContext context}) async{
     try{
       await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
-      print("erfolgreich angemeldet");
       Navigator.of(context).push(MaterialPageRoute(builder: (context) => AuthenticationWrapper()));
       return "erfolgreich angemeldet";
     } on FirebaseAuthException catch (e){
-      print("User nicht gefunden");
       showAlertDialog(context,"E-Mail oder Passwort ist falsch","Anmeldung fehlgeschlagen");
     }
 
@@ -102,14 +97,12 @@ class AuthenticationService {
   Future<String?> signUp({required String email, required String password, required int firstRegister, String name = "placeholder", required BuildContext context}) async{
     try{
       await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-      print("Benutzer erstellt");
       if(firstRegister == 1) {
         insertData(name, email,inputData().toString());
-        signIn(email: email, password: password, name: name,context: context);
+        signIn(email: email, password: password, context: context);
       }
       return "Benutzer erstellt";
     } on FirebaseAuthException catch (e){
-      print("Konnte nicht registrieren");
       showAlertDialog(context,"Bitte prüfen Sie die Daten auf Richtigkeit","Registrierung fehlgeschlagen");
           return e.message;
     }
@@ -136,13 +129,6 @@ class AuthenticationService {
     }
     );
   }
-  Future<String> loadImage(String userID
-      ) async{
-    final ref = FirebaseStorage.instance.ref().child('files///$userID');
-    var url = await ref.getDownloadURL();
-    print(url);
-    return url;
-  }
 
   Future deleteBestellungByID(BuildContext context, String userID) async {
     if(userID != getuserID()){
@@ -150,7 +136,6 @@ class AuthenticationService {
       return ;
     }
     databaseRef.child("Bestellungen/$userID").remove();
-    return await FirebaseStorage.instance.ref().child('').delete();
   }
 
     Future<String> getBestellungenFromDatabase(TextEditingController controller, var text) async{
